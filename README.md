@@ -10,20 +10,21 @@
 - `kubectl apply -f infrastructure/app_variables.yaml`
 - Create PV on node machine
     - `minikube ssh`
-    - ```
-sudo su
-if [ ! -d /var/lib/data/postgres_data ]; then
-    mkdir -p /var/lib/data/postgres_data;
-fi;
-chmod -R 777 /var/lib/data/postgres_data;
-chown -R 999:999 /var/lib/data/postgres_data;
+    - Create Persisted Volumes (PV)
+    ```
+    sudo su
+    if [ ! -d /var/lib/data/postgres_data ]; then
+        mkdir -p /var/lib/data/postgres_data;
+    fi;
+    chmod -R 777 /var/lib/data/postgres_data;
+    chown -R 999:999 /var/lib/data/postgres_data;
 
-if [ ! -d /var/lib/data/static_assets_data ]; then
-    mkdir -p /var/lib/data/static_assets_data;
-fi;
-chmod -R 777 /var/lib/data/static_assets_data;
-chown -R 999:999 /var/lib/data/static_assets_data;
-        ```
+    if [ ! -d /var/lib/data/static_assets_data ]; then
+        mkdir -p /var/lib/data/static_assets_data;
+    fi;
+    chmod -R 777 /var/lib/data/static_assets_data;
+    chown -R 999:999 /var/lib/data/static_assets_data;
+    ```
 - `kubectl apply -f infrastructure/component_postgres.yaml`
 
 - Setup Minikube docker-env `eval $(minikube docker-env)`
