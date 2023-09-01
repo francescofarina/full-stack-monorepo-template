@@ -1,64 +1,14 @@
-import React from "react";
-import { AnyAction } from "redux";
-import { ThunkDispatch } from "redux-thunk";
-import { connect, ConnectedProps } from "react-redux";
-import * as actions from "../store/authActions";
-import { Props as AppProps } from "../App";
+import React, { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
-import { useNavigate, useLocation } from "react-router-dom";
+const LoginPage: React.FC = () => {
+  const context = useContext(AuthContext);
 
-// Redux
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-  return {
-    onAuth: (username: string, password: string) =>
-      dispatch(actions.authLogin(username, password)),
-  };
-};
+  if (!context) {
+    return <div>Error: Context not provided</div>; 
+  }
 
-const connector = connect(null, mapDispatchToProps);
-
-type ReduxProps = ConnectedProps<typeof connector>;
-
-// Combine Redux props with AppProps
-type Props = AppProps & ReduxProps;
-
-const Login: React.FC<Props> = (props) => {
-  const [username, setuserName] = React.useState<string | null>(null);
-  const [password, setPassword] = React.useState<string | null>(null);
-
-  let navigate = useNavigate();
-  let location = useLocation();
-  let { from } = location.state || { from: { pathname: "/" } };
-
-  React.useEffect(() => {
-    if (props.isAuthenticated) { 
-        navigate(from.pathname);
-    }
-}, [props.isAuthenticated, navigate, from]);
-
-
-  const handleFormFieldChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    switch (event.target.id) {
-      case "username":
-        setuserName(event.target.value);
-        break;
-      case "password":
-        setPassword(event.target.value);
-        break;
-      default:
-        return null;
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (username && password) {
-      //@ts-ignore
-      props.onAuth(username, password);
-    }
-  };
+  const { loginUser } = context;
 
   return (
     <>
@@ -75,7 +25,7 @@ const Login: React.FC<Props> = (props) => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={loginUser}>
             <div>
               <label
                 htmlFor="username"
@@ -91,7 +41,6 @@ const Login: React.FC<Props> = (props) => {
                   autoComplete="username"
                   required
                   className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                  onChange={handleFormFieldChange}
                 />
               </div>
             </div>
@@ -121,7 +70,6 @@ const Login: React.FC<Props> = (props) => {
                   autoComplete="current-password"
                   required
                   className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                  onChange={handleFormFieldChange}
                 />
               </div>
             </div>
@@ -141,4 +89,4 @@ const Login: React.FC<Props> = (props) => {
   );
 };
 
-export default connector(Login);
+export default LoginPage;

@@ -1,52 +1,67 @@
-import React from 'react';
-import './App.css';
-import Urls from './Urls';
-import { connect } from 'react-redux';
-import * as actions from './store/authActions';
-import { AuthState, AuthAction } from './store/authReducer';
-import { ThunkDispatch } from 'redux-thunk';
+import React, { useContext } from "react";
+import "./App.css";
 
-interface OwnProps {
-  onAuth?: (username: string, password: string) => void;
-  // Any props you want to define that the component specifically needs
-}
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
 
-interface StateProps {
-  isAuthenticated: boolean;
-  token: string | null;
-}
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import PrivateRoute from "./utils/PrivateRoute";
+import Navbar from "./components/Navbar";
+import { AuthContext } from "./context/AuthContext";
 
-interface DispatchProps {
-  setAuthenticatedIfRequired: () => void;
-  logout: () => void;
-}
-
-export type Props = StateProps & DispatchProps & OwnProps;
-
-const App: React.FC<Props> = (props) => {
-  React.useEffect(() => {
-    props.setAuthenticatedIfRequired();
-  }, []);
-
+const App: React.FC = () => {
   return (
     <div className="App">
-      <Urls {...props} />
+      <Router>
+        <AuthProvider>
+          <Navbar />
+          <InnerApp />
+        </AuthProvider>
+      </Router>
     </div>
   );
-}
+};
 
-const mapStateToProps = (state: { auth: AuthState }): StateProps => {
-  return {
-    isAuthenticated: state.auth.token !== null && typeof state.auth.token !== 'undefined',
-    token: state.auth.token,
-  };
-}
+const InnerApp: React.FC = () => {
+  const context = useContext(AuthContext);
+  const location = useLocation();
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AuthAction>): DispatchProps => {
-  return {
-    setAuthenticatedIfRequired: () => dispatch(actions.authCheckState()),
-    logout: () => dispatch(actions.authLogout()),
-  };
-}
+  if (context === undefined) {
+    return <div>Loading...</div>;
+  }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+  const { loading } = context;
+
+  const mainClasses =
+    location.pathname === "/login" ? "py-10 h-full" : "py-10 lg:pl-72 h-full";
+
+  return (
+    <main className={mainClasses}>
+      <div className="px-4 sm:px-6 lg:px-8">
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <HomePage />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
+        )}
+      </div>
+    </main>
+  );
+};
+
+export default App;

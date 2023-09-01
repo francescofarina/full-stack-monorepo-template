@@ -42,7 +42,7 @@ if DJANGO_ENV == "development" or DJANGO_ENV == "production":
 else:
     SECRET_KEY = "localsecret"
     DEBUG = True
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ["*"]
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql_psycopg2",
