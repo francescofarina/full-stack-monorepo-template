@@ -57,7 +57,7 @@
 
 
 ## Pre-production TODOS
-- `DJANGO_ALLOWED_HOSTS` in `infrastructre/app_variables.yaml`. On the actual cloud deployment, after you create your Kubernetes cluster, you would first need to get the external IP address of your Kubernetes Cluster VM and then change the value of the variable 'DJANGO_ALLOWED_HOSTS' to this IP address. Or if you plan to use your own domain such as "www.yourwebsite.com", you could also put that value for this variable. So the value of this variable should look like below on your actual cloud deployment file.
+- `DJANGO_ALLOWED_HOSTS` in `infrastructre/app_variables.yaml`. On the actual cloud deployment, after you create your Kubernetes cluster, you would first need to get the external IP address of your Kubernetes Cluster VM and then change the value of the variable 'DJANGO_ALLOWED_HOSTS' to this IP address. Or if you plan to use your own domain, you could also put that value for this variable. So the value of this variable should look like below on your actual cloud deployment file.
 
     `DJANGO_ALLOWED_HOSTS: "your_kubernetes_cluster_IP_address www.yourwebsite.com [::1]"`
 - names and passwords in `infrastructre/app_secrets.yaml` and `infrastructre/app_variables.yaml`
