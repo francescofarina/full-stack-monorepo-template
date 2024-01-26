@@ -1,10 +1,12 @@
+# Monorepo template
+This repository can be used as a starting point to create and deploy projects with Python backends and JS/TS/React frontends. Basic authentication functionalities via jwt are provided and Postgres is used as a database.
+
 ## Local development
 - Run `docker-compose up` to launch the postgres database and the django backend
-- In a separate terminal run `npm start` to launch the frontend
-
-    NB: This setup seems to be required because it's hard to launch the frontend with docker-compose and nginx and mount the frontend volume in order to see changes in real time
+- Run `npm start` to launch the frontend
 
 ## Local production-like setup
+We use minikube to simulate a production setup locally.
 - `minikube start` (possibly provide an amount of resources `minikube start --cpus=4 --memory=10000 --disk-size=40g`)
 - Encode secrets (`echo -n "admin_password" | base64`), copy them in `app_secrets.yaml` and run `kubectl apply -f infrastructure/app_secrets.yaml`
 - `kubectl apply -f infrastructure/app_variables.yaml`
@@ -56,9 +58,11 @@
 - `minikube stop && minikube delete`
 
 
-## Pre-production TODOS
+## Deploying
+### TODOs
 - `DJANGO_ALLOWED_HOSTS` in `infrastructre/app_variables.yaml`. On the actual cloud deployment, after you create your Kubernetes cluster, you would first need to get the external IP address of your Kubernetes Cluster VM and then change the value of the variable 'DJANGO_ALLOWED_HOSTS' to this IP address. Or if you plan to use your own domain, you could also put that value for this variable. So the value of this variable should look like below on your actual cloud deployment file.
 
     `DJANGO_ALLOWED_HOSTS: "your_kubernetes_cluster_IP_address www.yourwebsite.com [::1]"`
+  
 - names and passwords in `infrastructre/app_secrets.yaml` and `infrastructre/app_variables.yaml`
 - Store images in container registry and pull them (remove `imagePullPolicy: Never` from `yaml` files)
