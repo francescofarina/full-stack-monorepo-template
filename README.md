@@ -1,6 +1,8 @@
 # Monorepo template
 This repository can be used as a starting point to create and deploy projects with Python backends and JS/TS/React frontends. Basic authentication functionalities via jwt are provided and Postgres is used as a database.
 
+> Note: this is mainly based on personal preferences and practices I've seen over the past. For some extra info on the K8S config and deployment steps, a good step-by-step guide is [here](https://datagraphi.com/blog/post/2021/2/10/kubernetes-guide-deploying-a-machine-learning-app-built-with-django-react-and-postgresql-using-kubernetes).
+
 ## Local development
 - Run `docker-compose up` to launch the postgres database and the django backend
 - Run `npm start` to launch the frontend
